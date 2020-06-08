@@ -9,10 +9,10 @@ const estadoInicial = {
    preco: 0,
    fornecedor: '',
    sucesso: false,
-   erros: []
+   errors: []
 }
 
-class CadastroProduto extends Component {
+class CadastroProdutos extends Component {
    constructor(props) {
       super(props);
       this.state = estadoInicial;
@@ -39,7 +39,7 @@ class CadastroProduto extends Component {
          this.limpar();
          this.setState({ sucesso: true })
       } catch (erro) {
-         const errors = erro.erros;
+         const errors = erro.errors;
          this.setState({ errors: errors})
       }
 
@@ -70,7 +70,7 @@ class CadastroProduto extends Component {
                }
 
                {
-                  this.state.erros.length > 0 &&
+                  this.state.errors.length > 0 &&
 
                   this.state.errors.map(msg => {
                      return (
@@ -139,4 +139,4 @@ class CadastroProduto extends Component {
    }
 }
 
-export default CadastroProduto;
+export default CadastroProdutos;
