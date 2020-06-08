@@ -20,5 +20,9 @@ function Navbar() {
                   <a className="nav-link" href="#">Consulta</a>
                </li>
             </ul>
+         </div>
+      </nav>
    )
 }
+
+export default Navbar
