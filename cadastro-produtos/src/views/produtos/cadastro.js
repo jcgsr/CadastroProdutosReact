@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import ProdutoService from '../../app/produtoService'
+import ProdutoService from '../../app/produtoService';
+import { withRouter } from 'react-router-dom';
 
 const estadoInicial = {
    nome: '',
@@ -9,7 +10,8 @@ const estadoInicial = {
    preco: 0,
    fornecedor: '',
    sucesso: false,
-   errors: []
+   errors: [],
+   atualizando: false
 }
 
 class CadastroProdutos extends Component {
@@ -40,7 +42,7 @@ class CadastroProdutos extends Component {
          this.setState({ sucesso: true })
       } catch (erro) {
          const errors = erro.errors;
-         this.setState({ errors: errors})
+         this.setState({ errors: errors })
       }
 
    }
@@ -49,11 +51,24 @@ class CadastroProdutos extends Component {
       this.setState(estadoInicial)
    }
 
+   componentDidMount() {
+      const sku = this.props.match.params.sku;
+
+      if (sku) {
+         const resultado = this.service.obterProdutos().filter(produto => produto.sku === sku)
+         if (resultado.length === 1) {
+            const produtoEncontrado = resultado[0]
+            this.setState({ ...produtoEncontrado, atualizando: true })
+         }
+      }
+   }
+
    render() {
       return (
          <div className="card">
             <div className="card-header">
-               Cadastro de Produtos
+               {this.state.atualizando ? 'Atualização ' : 'Cadastro '}
+               de Produtos
             </div>
             <div className="card-body">
 
@@ -86,14 +101,25 @@ class CadastroProdutos extends Component {
                   <div className="col-md-6">
                      <div className="form-group">
                         <label>Nome: *</label>
-                        <input type="text" name="nome" onChange={this.onChange} value={this.state.nome} className="form-control" />
+                        <input
+                           type="text"
+                           name="nome"
+                           onChange={this.onChange}
+                           value={this.state.nome} c
+                           lassName="form-control" />
                      </div>
                   </div>
 
                   <div className="col-md-6">
                      <div className="form-group">
                         <label>SKU: *</label>
-                        <input type="text" name="sku" onChange={this.onChange} value={this.state.sku} className="form-control" />
+                        <input
+                           type="text"
+                           name="sku"
+                           disabled={this.state.atualizando}
+                           onChange={this.onChange}
+                           value={this.state.sku}
+                           className="form-control" />
                      </div>
                   </div>
                </div>
@@ -111,14 +137,24 @@ class CadastroProdutos extends Component {
                   <div className="col-md-6">
                      <div className="form-group">
                         <label>Preço: *</label>
-                        <input type="text" name="preco" onChange={this.onChange} value={this.state.preco} className="form-control" />
+                        <input
+                           type="text"
+                           name="preco"
+                           onChange={this.onChange}
+                           value={this.state.preco}
+                           className="form-control" />
                      </div>
                   </div>
 
                   <div className="col-md-6">
                      <div className="form-group">
                         <label>Fornecedor: *</label>
-                        <input value={this.state.fornecedor} name="fornecedor" onChange={this.onChange} type="text" className="form-control" />
+                        <input
+                           value={this.state.fornecedor}
+                           name="fornecedor"
+                           onChange={this.onChange}
+                           type="text"
+                           className="form-control" />
                      </div>
                   </div>
 
@@ -126,7 +162,9 @@ class CadastroProdutos extends Component {
 
                <div className="row">
                   <div className="col-md-1">
-                     <button onClick={this.onSubmit} className="btn btn-success">Salvar</button>
+                     <button onClick={this.onSubmit} className="btn btn-success">
+                        {this.state.atualizando ? 'Atualizar' : 'Salvar'}
+                     </button>
                   </div>
                   <div className="col-md-1">
                      <button onClick={this.limpar} className="btn btn-primary">Limpar</button>
@@ -139,4 +177,4 @@ class CadastroProdutos extends Component {
    }
 }
 
-export default CadastroProdutos;
+export default withRouter(CadastroProdutos);
